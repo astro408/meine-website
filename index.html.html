@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server - Feedback</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+
+        .server-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .feedback-list {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .feedback-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .feedback-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .feedback-rating {
+            color: #ffd700;
+            font-size: 18px;
+        }
+
+        .feedback-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .feedback-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header,
+            .feedback-form,
+            .feedback-list,
+            .server-info {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Mein Minecraft Server</h1>
+            <p>Teile deine Erfahrungen und hilf uns, den Server zu verbessern!</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalFeedback">0</div>
+                <div class="stat-label">Bewertungen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgRating">0.0</div>
+                <div class="stat-label">Durchschnitt</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="onlinePlayers">???</div>
+                <div class="stat-label">Online Spieler</div>
+            </div>
+        </div>
+
+        <div class="server-info">
+            <h2>🏰 Server Information</h2>
+            <p><strong>Server IP:</strong> 147.185.221.29:13565</p>
+            <p><strong>Version:</strong> 1.21.4</p>
+            <p><strong>Spielmodus:</strong> Survival</p>
+            <p><strong>Discord:</strong> <a href="https://discord.gg/VDeYbaQvQp" target="_blank" style="color: #667eea; text-decoration: none;">discord.gg/VDeYbaQvQp</a></p>
+        </div>
+
+        <div class="feedback-form">
+            <h2>💬 Feedback abgeben</h2>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="playerName">Dein Minecraft Name:</label>
+                    <input type="text" id="playerName" name="playerName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Kategorie:</label>
+                    <select id="category" name="category" required>
+                        <option value="">Wähle eine Kategorie</option>
+                        <option value="gameplay">Gameplay</option>
+                        <option value="community">Community</option>
+                        <option value="performance">Performance</option>
+                        <option value="features">Features</option>
+                        <option value="bugs">Bugs/Probleme</option>
+                        <option value="suggestion">Vorschlag</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Bewertung:</label>
+                    <div class="rating-group">
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <span id="ratingText">Keine Bewertung</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedback">Dein Feedback:</label>
+                    <textarea id="feedback" name="feedback" rows="5" placeholder="Erzähle uns von deiner Erfahrung auf dem Server..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Feedback senden ✨</button>
+            </form>
+        </div>
+
+        <div class="feedback-list">
+            <h2>📝 Neueste Bewertungen</h2>
+            <div id="feedbackContainer">
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <span class="feedback-name">Steve_Builder</span>
+                        <span class="feedback-rating">★★★★★</span>
+                        <span class="feedback-date">Vor 2 Tagen</span>
+                    </div>
+                    <div class="feedback-text">
+                        Großartiger Server! Die Community ist sehr freundlich und die Builds sind beeindruckend. Macht weiter so!
+                    </div>
+                </div>
+
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <span class="feedback-name">CraftMaster99</span>
+                        <span class="feedback-rating">★★★★☆</span>
+                        <span class="feedback-date">Vor 3 Tagen</span>
+                    </div>
+                    <div class="feedback-text">
+                        Sehr guter Server mit vielen coolen Features. Manchmal etwas laggy, aber insgesamt eine tolle Erfahrung.
+                    </div>
+                </div>
+
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <span class="feedback-name">RedstoneGirl</span>
+                        <span class="feedback-rating">★★★★★</span>
+                        <span class="feedback-date">Vor 1 Woche</span>
+                    </div>
+                    <div class="feedback-text">
+                        Die Redstone-Welten sind fantastisch! Perfekt für technische Builds. Danke an die Admins für die Unterstützung.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRating = 0;
+        let feedbackData = [];
+
+        // Stern-Bewertung System
+        const stars = document.querySelectorAll('.star');
+        const ratingText = document.getElementById('ratingText');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.dataset.rating);
+                updateStars();
+                updateRatingText();
+            });
+
+            star.addEventListener('mouseover', function() {
+                const hoverRating = parseInt(this.dataset.rating);
+                highlightStars(hoverRating);
+            });
+        });
+
+        document.getElementById('starRating').addEventListener('mouseleave', function() {
+            updateStars();
+        });
+
+        function highlightStars(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function updateStars() {
+            highlightStars(currentRating);
+        }
+
+        function updateRatingText() {
+            const texts = ['Keine Bewertung', 'Schlecht', 'Okay', 'Gut', 'Sehr gut', 'Ausgezeichnet'];
+            ratingText.textContent = texts[currentRating];
+        }
+
+        // Formular verarbeitung
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (currentRating === 0) {
+                alert('Bitte gib eine Bewertung ab!');
+                return;
+            }
+
+            const formData = new FormData(this);
+            const feedback = {
+                name: formData.get('playerName'),
+                category: formData.get('category'),
+                rating: currentRating,
+                text: formData.get('feedback'),
+                date: new Date().toLocaleDateString('de-DE')
+            };
+
+            feedbackData.unshift(feedback);
+            addFeedbackToList(feedback);
+            updateStats();
+            
+            // Formular zurücksetzen
+            this.reset();
+            currentRating = 0;
+            updateStars();
+            updateRatingText();
+            
+            alert('Vielen Dank für dein Feedback! 🎉');
+        });
+
+        function addFeedbackToList(feedback) {
+            const container = document.getElementById('feedbackContainer');
+            const stars = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
+            
+            const feedbackElement = document.createElement('div');
+            feedbackElement.className = 'feedback-item';
+            feedbackElement.innerHTML = `
+                <div class="feedback-header">
+                    <span class="feedback-name">${feedback.name}</span>
+                    <span class="feedback-rating">${stars}</span>
+                    <span class="feedback-date">Heute</span>
+                </div>
+                <div class="feedback-text">${feedback.text}</div>
+            `;
+            
+            container.insertBefore(feedbackElement, container.firstChild);
+        }
+
+        function updateStats() {
+            const totalFeedback = feedbackData.length + 3; // +3 für die Beispiel-Bewertungen
+            let totalRating = 0;
+            
+            // Beispiel-Bewertungen einbeziehen
+            totalRating += 5 + 4 + 5; // Steve_Builder: 5, CraftMaster99: 4, RedstoneGirl: 5
+            
+            feedbackData.forEach(item => {
+                totalRating += item.rating;
+            });
+            
+            const avgRating = (totalRating / totalFeedback).toFixed(1);
+            
+            document.getElementById('totalFeedback').textContent = totalFeedback;
+            document.getElementById('avgRating').textContent = avgRating;
+            
+            // Zufällige Online-Spieler Simulation
+            const randomPlayers = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('onlinePlayers').textContent = randomPlayers;
+        }
+
+        // Initial stats update
+        updateStats();
+        
+        // Simuliere sich ändernde Online-Spielerzahl
+        setInterval(() => {
+            const randomPlayers = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('onlinePlayers').textContent = randomPlayers;
+        }, 30000);
+    </script>
+</body>
+</html>
